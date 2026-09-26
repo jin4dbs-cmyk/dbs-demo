@@ -50,7 +50,7 @@ export function RateStrip({ bid }: { bid: Bid }) {
             <span className="text-muted-foreground absolute -left-16 w-14 text-right text-xs leading-4">{m.name}</span>
             <div
               className={cn(
-                "absolute top-0 size-4 -translate-x-1/2 rounded-full border-2 border-white shadow dark:border-zinc-900",
+                "absolute top-0 size-4 -translate-x-1/2 rounded-full border-2 border-white shadow",
                 MODEL_COLOR[m.id],
                 best.includes(m.id) && "ring-best ring-2 ring-offset-1",
               )}

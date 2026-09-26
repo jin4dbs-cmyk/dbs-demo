@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react"
-import { ChevronLeft, ChevronRight, Database, Moon, RefreshCw, Sun } from "lucide-react"
+import { useMemo, useState } from "react"
+import { ChevronLeft, ChevronRight, Database, RefreshCw } from "lucide-react"
 import { BidTable } from "@/components/bid/bid-table"
 import { EvidenceDialog } from "@/components/bid/evidence-dialog"
 import { DEFAULT_FILTERS, Filters, type FilterState } from "@/components/bid/filters"
@@ -14,35 +14,11 @@ import type { Bid } from "@/lib/types"
 
 const PAGE_SIZE = 15
 
-function prefersDark() {
-  const theme = document.documentElement.dataset.theme
-  if (theme) return theme === "dark"
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-}
 
 export default function App() {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [page, setPage] = useState(0)
   const [selected, setSelected] = useState<Bid | null>(null)
-  const [dark, setDark] = useState(prefersDark)
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark)
-  }, [dark])
-
-  // 호스트(뷰어)가 data-theme 을 바꾸면 따라감
-  useEffect(() => {
-    const root = document.documentElement
-    const obs = new MutationObserver(() => setDark(prefersDark()))
-    obs.observe(root, { attributes: true, attributeFilter: ["data-theme"] })
-    const mq = window.matchMedia("(prefers-color-scheme: dark)")
-    const onChange = () => setDark(prefersDark())
-    mq.addEventListener("change", onChange)
-    return () => {
-      obs.disconnect()
-      mq.removeEventListener("change", onChange)
-    }
-  }, [])
 
   // 상태 필터를 제외한 조건 — 모델 정확도는 개찰 완료 건 기준이므로 상태 필터와 무관하게 계산
   const scoped = useMemo(() => {
@@ -89,9 +65,6 @@ export default function App() {
                 <RefreshCw className="size-3.5" />
                 마지막 수집 {LAST_CRAWLED_AT}
               </span>
-              <Button variant="ghost" size="icon" onClick={() => setDark((d) => !d)} aria-label="테마 전환">
-                {dark ? <Sun /> : <Moon />}
-              </Button>
             </div>
           </div>
         </header>
