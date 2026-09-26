@@ -82,7 +82,7 @@ export function BidTable({
           {bids.map((bid) => {
             const best = bestModelsOf(bid)
             return (
-              <TableRow key={bid.id} className="group">
+              <TableRow key={bid.id} className="group h-[60px]">
                 <TableCell className="text-muted-foreground pl-5 font-mono text-xs">{bid.id}</TableCell>
                 <TableCell className="max-w-[340px] whitespace-normal">
                   <div className="flex items-center gap-1.5">
@@ -119,13 +119,13 @@ export function BidTable({
                           {isBest && <Check className="size-3.5" strokeWidth={3} />}
                           {fmtRate(bid.predictions[m.id])}
                         </span>
-                        {err != null && (
-                          <span
-                            className={cn("text-[11px]", isBest ? "text-best-foreground/85" : "text-muted-foreground")}
-                          >
-                            {fmtDelta(err)}
-                          </span>
-                        )}
+                        {/* 개찰 전에도 같은 높이를 유지하도록 오차 줄 자리를 비워 둠 */}
+                        <span
+                          className={cn("text-[11px] leading-4", isBest ? "text-best-foreground/85" : "text-muted-foreground")}
+                          aria-hidden={err == null}
+                        >
+                          {err != null ? fmtDelta(err) : "\u00a0"}
+                        </span>
                       </div>
                     </TableCell>
                   )
@@ -136,10 +136,12 @@ export function BidTable({
                 <TableCell className="text-center">
                   <div className="text-sm tabular-nums">{bid.openDate}</div>
                   <Badge
-                    variant={bid.status === "opened" ? "secondary" : "outline"}
+                    variant="outline"
                     className={cn(
-                      "mt-1 rounded-full px-2 py-0 text-[11px]",
-                      bid.status === "pending" && "border-primary/30 text-primary",
+                      "mt-1 rounded-full px-2 py-0 text-[11px] leading-4",
+                      bid.status === "pending"
+                        ? "border-primary/30 text-primary"
+                        : "bg-secondary text-secondary-foreground border-transparent",
                     )}
                   >
                     {bid.status === "opened" ? "개찰 완료" : "개찰 전"}

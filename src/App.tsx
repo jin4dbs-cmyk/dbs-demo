@@ -6,6 +6,7 @@ import { DEFAULT_FILTERS, Filters, type FilterState } from "@/components/bid/fil
 import { ModelAccuracy } from "@/components/bid/model-accuracy"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { computeModelStats, overallBest } from "@/lib/metrics"
 import { MODELS } from "@/lib/models"
@@ -71,39 +72,33 @@ export default function App() {
 
         <main className="mx-auto max-w-[1400px] space-y-6 px-4 py-6 sm:px-6">
           {/* 수집 현황 + 모델 정확도 */}
-          <section className="grid gap-3 xl:grid-cols-[260px_minmax(0,1fr)]">
-            <Card className="justify-between gap-4 px-5 py-5">
+          <Card className="flex-col gap-4 px-4 py-3 lg:flex-row lg:items-center lg:gap-5">
+            <div className="flex shrink-0 items-center gap-4 lg:w-52">
               <div>
-                <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
-                  <Database className="size-4" />
+                <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                  <Database className="size-3.5" />
                   크롤링 총 입찰 건수
                 </div>
-                <div className="mt-1 text-4xl font-bold tracking-tight">
+                <div className="text-3xl leading-tight font-bold tracking-tight tabular-nums">
                   {BIDS.length.toLocaleString()}
-                  <span className="text-muted-foreground ml-1 text-lg font-medium">건</span>
+                  <span className="text-muted-foreground ml-0.5 text-base font-medium">건</span>
+                </div>
+                <div className="text-muted-foreground text-xs tabular-nums">
+                  개찰 완료 <b className="text-foreground">{totalOpened}</b> · 개찰 전{" "}
+                  <b className="text-foreground">{BIDS.length - totalOpened}</b>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="bg-muted/60 rounded-lg px-3 py-2">
-                  <div className="text-muted-foreground text-xs">개찰 완료</div>
-                  <div className="font-semibold">{totalOpened}건</div>
-                </div>
-                <div className="bg-muted/60 rounded-lg px-3 py-2">
-                  <div className="text-muted-foreground text-xs">개찰 전</div>
-                  <div className="font-semibold">{BIDS.length - totalOpened}건</div>
-                </div>
-              </div>
-            </Card>
-            <div className="space-y-2">
-              <div className="flex items-baseline justify-between">
-                <h2 className="text-sm font-semibold">모델별 정확도</h2>
-                <span className="text-muted-foreground text-xs">
-                  현재 필터의 개찰 완료 {openedCount}건 기준
-                </span>
+            </div>
+            <Separator orientation="vertical" className="hidden !h-16 lg:block" />
+            <Separator className="lg:hidden" />
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <div className="flex items-baseline justify-between gap-2">
+                <h2 className="text-xs font-semibold">모델별 정확도</h2>
+                <span className="text-muted-foreground text-[11px]">현재 필터의 개찰 완료 {openedCount}건 기준</span>
               </div>
               <ModelAccuracy stats={stats} best={best} />
             </div>
-          </section>
+          </Card>
 
           {/* 필터 */}
           <Filters
