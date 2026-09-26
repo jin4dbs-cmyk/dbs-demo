@@ -5,6 +5,7 @@ The site crawls apartment (공동주택) supervision bid notices from 나라장�
 - **Stack**: Vite, React 19, TypeScript, Tailwind CSS v4, shadcn/ui (new-york, Radix)
 - **Run**: `npm install` → `npm run dev` (http://localhost:5173)
 - **Build**: `npm run build`
+- **Single-file prototype**: `npm run build:prototype` → `prototype/index.html` (opens directly in a browser, no server needed)
 
 ## Features
 

@@ -14,15 +14,35 @@ import type { Bid } from "@/lib/types"
 
 const PAGE_SIZE = 15
 
+function prefersDark() {
+  const theme = document.documentElement.dataset.theme
+  if (theme) return theme === "dark"
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+}
+
 export default function App() {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [page, setPage] = useState(0)
   const [selected, setSelected] = useState<Bid | null>(null)
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(prefersDark)
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark)
   }, [dark])
+
+  // 호스트(뷰어)가 data-theme 을 바꾸면 따라감
+  useEffect(() => {
+    const root = document.documentElement
+    const obs = new MutationObserver(() => setDark(prefersDark()))
+    obs.observe(root, { attributes: true, attributeFilter: ["data-theme"] })
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const onChange = () => setDark(prefersDark())
+    mq.addEventListener("change", onChange)
+    return () => {
+      obs.disconnect()
+      mq.removeEventListener("change", onChange)
+    }
+  }, [])
 
   // 상태 필터를 제외한 조건 — 모델 정확도는 개찰 완료 건 기준이므로 상태 필터와 무관하게 계산
   const scoped = useMemo(() => {
@@ -53,7 +73,7 @@ export default function App() {
   return (
     <TooltipProvider>
       <div className="min-h-screen">
-        <header className="bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
+        <header className="bg-background/80 sticky top-[env(safe-area-inset-top,0px)] z-40 border-b backdrop-blur">
           <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-4 px-4 sm:px-6">
             <div className="flex items-center gap-2.5">
               <div className="bg-primary text-primary-foreground grid size-8 place-items-center rounded-lg text-sm font-bold">
