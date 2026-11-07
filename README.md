@@ -6,6 +6,7 @@ The site crawls apartment (공동주택) supervision bid notices from 나라장�
 - **Run**: `npm install` → `npm run dev` (http://localhost:5173)
 - **Build**: `npm run build`
 - **Single-file prototype**: `npm run build:prototype` → `prototype/index.html` (opens directly in a browser, no server needed)
+- **Version snapshots**: `prototype/archive/v1-user-dashboard.html` — user dashboard v1 (commit `8cd773e`, before admin mode)
 
 ## Features
 
