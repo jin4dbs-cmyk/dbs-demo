@@ -6,6 +6,7 @@ The site crawls apartment (공동주택) supervision bid notices from 나라장�
 - **Run**: `npm install` → `npm run dev` (http://localhost:5173)
 - **Build**: `npm run build`
 - **Single-file prototype**: `npm run build:prototype` → `prototype/index.html` (opens directly in a browser, no server needed)
+- **Admin prototype**: `npm run dev:admin` (dev server) / `npm run build:admin` → `prototype/admin.html` (single file, opens in a browser)
 - **Version snapshots**: `prototype/archive/v1-user-dashboard.html` — user dashboard v1 (commit `8cd773e`, before admin mode)
 
 ## Features
@@ -32,3 +33,17 @@ Change the model names and descriptions in `src/lib/models.ts`.
 ## Components
 
 The shadcn/ui components are in `src/components/ui`. Add new ones with `npx shadcn@latest add <component>` (see `components.json`).
+
+## Admin prototype (`admin.html`)
+
+A 3-column layout for checking predictions while changing which features are used. The styling maps the Toss design tokens (TDS palette, Pretendard) onto the shadcn tokens (`src/admin/admin.css`).
+
+| Column | Content |
+| --- | --- |
+| 1. Feature selection | 67 features in 4 groups (notice info, market stats for all bids / same agency / same category). Presets: 전부, 공고 정보만, 시장 통계만, 전부 해제. Shows the selected bid's value and each feature's importance |
+| 2. Bid list | Bids not yet opened, with search, and tags for category, region, reserve price range and missing data |
+| 3. Prediction | Predicted 예가율, predicted 낙찰하한가, middle 50% range, confidence, and the top 5 bins at 0.1%p and 0.01%p (with 예정가격 and 낙찰하한가 amounts) |
+
+Data integration:
+- `src/admin/data.ts`: sample bids and feature values. Replace with the BigQuery response mapped to `AdminBid[]` (`src/admin/types.ts`).
+- `src/admin/predict.ts`: approximate distribution from the selected features. Replace with a call to the model API that returns the same `Prediction` shape.
